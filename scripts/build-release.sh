@@ -8,6 +8,7 @@ ARCHIVE_DIR="$ROOT_DIR/build/Release"
 DIST_DIR="$ROOT_DIR/dist"
 APP_NAME="Cclips.app"
 VOLUME_NAME="Cclips"
+SIGNING_IDENTITY="${APP_SIGNING_IDENTITY:-}"
 
 rm -rf "$DERIVED_DATA" "$ARCHIVE_DIR" "$DIST_DIR"
 mkdir -p "$ARCHIVE_DIR" "$DIST_DIR"
@@ -29,7 +30,11 @@ fi
 cp -R "$APP_PATH" "$ARCHIVE_DIR/"
 APP_RELEASE_PATH="$ARCHIVE_DIR/$APP_NAME"
 
-codesign --force --deep --sign - "$APP_RELEASE_PATH"
+if [[ -n "$SIGNING_IDENTITY" ]]; then
+  codesign --force --deep --options runtime --timestamp --sign "$SIGNING_IDENTITY" "$APP_RELEASE_PATH"
+else
+  codesign --force --deep --sign - "$APP_RELEASE_PATH"
+fi
 
 ZIP_PATH="$DIST_DIR/Cclips-macOS.zip"
 DMG_PATH="$DIST_DIR/Cclips-macOS.dmg"

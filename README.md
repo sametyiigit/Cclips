@@ -1,5 +1,7 @@
 # Cclips
 
+![Cclips GitHub Preview](Resources/GitHubPreview.png)
+
 Cclips is a lightweight, native clipboard manager for macOS built with SwiftUI and SwiftData. It automatically saves what you copy, lets you search clipboard history instantly, and keeps important clips pinned and ready to reuse.
 
 ## Highlights
@@ -9,6 +11,7 @@ Cclips is a lightweight, native clipboard manager for macOS built with SwiftUI a
 - Global shortcuts for opening history and advancing the paste stack
 - Smart collections for Links, Images, Colors, and Pinned clips
 - Menu bar access with recent-history actions
+- First-launch onboarding for setup and hotkey discovery
 - Clean local link detection without extra web renderer noise
 - Privacy controls to ignore password managers and custom apps
 - Sequential paste stack for queued or pinned clips
@@ -37,7 +40,7 @@ Note:
 
 ## Build From Source
 
-1. Open [Cclips.xcodeproj](/Users/sametyigit/Desktop/Cclips/Cclips.xcodeproj/project.pbxproj) in Xcode.
+1. Open `Cclips.xcodeproj` in Xcode.
 2. Choose the `Cclips` app target.
 3. Run the app on macOS.
 
@@ -72,13 +75,30 @@ Cclips stores your clipboard history locally on-device. By default, it ignores s
 
 ## GitHub Releases
 
-The repository includes a GitHub Actions workflow at [.github/workflows/release.yml](/Users/sametyigit/Desktop/Cclips/.github/workflows/release.yml).
+The repository includes a GitHub Actions workflow at [`/.github/workflows/release.yml`](.github/workflows/release.yml).
 
 How it works:
 - Push a tag like `v1.0.0`
 - GitHub Actions builds the app on macOS
 - The workflow produces a `.dmg` and `.zip`
 - Those files are attached to the GitHub release automatically
+
+## Release Notes
+
+The release body template lives at [`/.github/release-notes.md`](.github/release-notes.md).
+It gives every GitHub release a cleaner install section and first-launch guidance.
+
+## Distribution
+
+Distribution scripts and notes:
+- [`/scripts/build-release.sh`](scripts/build-release.sh)
+- [`/scripts/notarize-release.sh`](scripts/notarize-release.sh)
+- [`/docs/Distribution.md`](docs/Distribution.md)
+
+## GitHub Launch Kit
+
+Suggested GitHub About text, topics, and release naming live here:
+- [`/docs/GitHubLaunchKit.md`](docs/GitHubLaunchKit.md)
 
 ## Roadmap
 

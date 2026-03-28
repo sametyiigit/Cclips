@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainWindowView: View {
     @ObservedObject var store: ClipboardStore
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     let openSettings: () -> Void
 
     var body: some View {
@@ -43,6 +44,14 @@ struct MainWindowView: View {
                     .transition(.opacity.combined(with: .move(edge: .bottom)))
             }
         }
+        .overlay {
+            if !hasCompletedOnboarding {
+                WelcomeOverlay(
+                    openSettings: openSettings,
+                    dismiss: { hasCompletedOnboarding = true }
+                )
+            }
+        }
         .preferredColorScheme(nil)
     }
 
@@ -72,6 +81,12 @@ struct MainWindowView: View {
             }
 
             Button {
+                hasCompletedOnboarding = false
+            } label: {
+                Label("Welcome", systemImage: "sparkles")
+            }
+
+            Button {
                 openSettings()
             } label: {
                 Label("Privacy", systemImage: "hand.raised")
@@ -80,5 +95,105 @@ struct MainWindowView: View {
         .padding(.horizontal, 18)
         .padding(.vertical, 14)
         .background(.regularMaterial)
+    }
+}
+
+private struct WelcomeOverlay: View {
+    let openSettings: () -> Void
+    let dismiss: () -> Void
+
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .fill(.black.opacity(0.22))
+                .ignoresSafeArea()
+
+            VStack(alignment: .leading, spacing: 22) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Welcome to Cclips")
+                            .font(.system(size: 30, weight: .bold, design: .rounded))
+                        Text("Clipboard history, pinning, and quick paste flow in one lightweight Mac app.")
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.headline)
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                HStack(spacing: 14) {
+                    WelcomeFeatureCard(
+                        title: "Copy Anywhere",
+                        detail: "Everything you copy appears in history and stays searchable.",
+                        systemImage: "doc.on.clipboard"
+                    )
+                    WelcomeFeatureCard(
+                        title: "Open Fast",
+                        detail: "Use Shift-Command-V to bring Cclips forward from anywhere.",
+                        systemImage: "keyboard"
+                    )
+                    WelcomeFeatureCard(
+                        title: "Paste In Order",
+                        detail: "Queue important clips, then advance them with Shift-Command-C.",
+                        systemImage: "list.bullet.clipboard"
+                    )
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Recommended first step")
+                        .font(.headline)
+                    Text("Open Privacy settings if you want automatic paste simulation. Cclips still works for history and manual recopy without it.")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                }
+
+                HStack {
+                    Button("Open Privacy Settings") {
+                        openSettings()
+                    }
+
+                    Spacer()
+
+                    Button("Start Using Cclips") {
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+            .padding(28)
+            .frame(width: 760)
+            .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 28))
+            .shadow(color: .black.opacity(0.16), radius: 30, y: 12)
+        }
+    }
+}
+
+private struct WelcomeFeatureCard: View {
+    let title: String
+    let detail: String
+    let systemImage: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Image(systemName: systemImage)
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(.orange)
+            Text(title)
+                .font(.headline)
+            Text(detail)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(18)
+        .background(.background.opacity(0.78), in: RoundedRectangle(cornerRadius: 20))
     }
 }

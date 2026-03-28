@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @ObservedObject var privacySettings: PrivacySettings
     @ObservedObject var accessibilityMonitor: AccessibilityPermissionMonitor
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var body: some View {
         Form {
@@ -85,6 +86,16 @@ struct SettingsView: View {
                 }
                 LabeledContent("Paste stack") {
                     Text("Shift-Command-C")
+                }
+            }
+
+            Section("Onboarding") {
+                Text("Reopen the welcome flow if you want to re-check the first-run guidance.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+
+                Button("Show Welcome Screen Again") {
+                    hasCompletedOnboarding = false
                 }
             }
         }
